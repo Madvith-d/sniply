@@ -11,3 +11,93 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id           String   @id @default(cuid())
+
+  email        String   @unique
+  passwordHash String
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  links        Link[]
+  refreshTokens RefreshToken[]
+
+  @@index([email])
+}
+
+model Link {
+  id           String   @id @default(cuid())
+
+  shortCode    String   @unique
+  originalUrl  String
+
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  startsAt     DateTime?
+  expiresAt    DateTime?
+
+  clickCap     Int?
+  clickCount   Int      @default(0)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  clicks       Click[]
+
+  @@index([shortCode])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Click {
+  id           String   @id @default(cuid())
+
+  linkId        String
+  link          Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  // Unique visitor tracking
+  visitorHash   String?
+  isUnique      Boolean  @default(false)
+
+  // Bot detection
+  isBot         Boolean  @default(false)
+
+  // Device info
+  device        String?
+  browser       String?
+  os            String?
+
+  // Geo info
+  country       String?
+  city          String?
+
+  // Referrer
+  referer       String?
+
+  createdAt     DateTime @default(now())
+
+  @@index([linkId])
+  @@index([linkId, createdAt])
+  @@index([linkId, isBot])
+  @@index([linkId, country])
+  @@index([linkId, device])
+  @@index([visitorHash, linkId])
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+
+  token      String   @unique
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt  DateTime
+
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
