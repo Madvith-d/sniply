@@ -79,4 +79,30 @@ router.delete(
     }
 );
 
+
+router.get(
+    "/:id",
+    authenticate,
+    async (req, res) => {
+        const link =
+            await prisma.link.findFirst({
+                where: {
+                    id: req.params.id as any,
+                    userId:
+                        req.user!.userId,
+                },
+            });
+
+        if (!link) {
+            return res
+                .status(404)
+                .json({
+                    message:
+                        "Link not found",
+                });
+        }
+
+        res.json(link);
+    }
+);
 export default router;
