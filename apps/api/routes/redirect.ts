@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma";
-
+import { recordClick } from "../services/clickService";
 const router = Router();
 
 router.get("/:shortCode", async (req, res) => {
@@ -63,10 +63,26 @@ router.get("/:shortCode", async (req, res) => {
             },
         },
     });
+
+    const ip =
+        req.ip ||
+        req.socket.remoteAddress ||
+        "unknown";
+
+    await recordClick({
+        linkId: link.id,
+        ip,
+        userAgent:
+            req.headers["user-agent"],
+        referer:
+            req.headers.referer,
+    });
     return res.redirect(
         307,
         link.originalUrl
     );
+
+
 });
 
 export default router;
