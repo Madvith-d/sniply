@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { API_BASE } from "./api";
+import { API_URL } from "./api";
 
 export type ShortLinkState =
   | "scheduled"
@@ -39,17 +39,13 @@ export async function resolveShortLink(
 ): Promise<ShortLinkResolution> {
   try {
     const headerList = await headers();
-    const res = await fetch(`${API_BASE}/${encodeURIComponent(shortCode)}`, {
+    const res = await fetch(`${API_URL}/${encodeURIComponent(shortCode)}`, {
       redirect: "manual",
       cache: "no-store",
       headers: getForwardHeaders(headerList),
     });
 
-    if (
-      res.status === 307 ||
-      res.status === 302 ||
-      res.status === 301
-    ) {
+    if (res.status === 307 || res.status === 302 || res.status === 301) {
       const url = res.headers.get("Location");
       if (url) return { status: "redirect", url };
       return { status: "error" };

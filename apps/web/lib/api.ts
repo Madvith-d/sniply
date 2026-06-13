@@ -11,8 +11,7 @@ import type {
   User,
 } from "./types";
 
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export class ApiError extends Error {
   constructor(
@@ -30,7 +29,7 @@ async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
   const { skipAuth, ...fetchOptions } = options;
   const token = skipAuth ? null : getAccessToken();
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${API_URL}${path}`, {
     cache: "no-store",
     ...fetchOptions,
     headers: {
@@ -90,8 +89,7 @@ export const linksApi = {
       body: JSON.stringify(input),
     }),
 
-  delete: (id: string) =>
-    api<void>(`/api/links/${id}`, { method: "DELETE" }),
+  delete: (id: string) => api<void>(`/api/links/${id}`, { method: "DELETE" }),
 };
 
 export const analyticsApi = {
@@ -104,9 +102,7 @@ export const analyticsApi = {
   ) => {
     const params = new URLSearchParams({ granularity });
     if (last !== undefined) params.set("last", String(last));
-    return api<TimeSeriesPoint[]>(
-      `/api/analytics/${id}/timeseries?${params}`,
-    );
+    return api<TimeSeriesPoint[]>(`/api/analytics/${id}/timeseries?${params}`);
   },
 
   breakdown: (id: string, by: BreakdownDimension) =>
