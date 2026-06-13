@@ -54,7 +54,7 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12">
-        <div className="brutal-card-sm p-6 text-center font-heading font-bold animate-pulse">
+        <div className="brutal-card-sm bg-card p-6 text-center font-heading font-bold animate-pulse text-ink/60">
           Loading...
         </div>
       </div>
@@ -65,7 +65,9 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12">
         <Card title="Link not found">
-          <p className="text-ink/70 mb-4">{error || "This link does not exist."}</p>
+          <p className="text-ink/70 mb-4">
+            {error || "This link does not exist."}
+          </p>
           <Link href="/dashboard">
             <Button variant="secondary">Back to dashboard</Button>
           </Link>
@@ -79,7 +81,7 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
   const url = shortUrl(link.shortCode);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 md:py-10 flex flex-col gap-6">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10 flex flex-col gap-6">
       <Link
         href="/dashboard"
         className="text-sm font-bold font-heading hover:underline w-fit"
@@ -88,7 +90,7 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
       </Link>
 
       <div className="flex items-start justify-between gap-4">
-        <h1 className="text-2xl md:text-3xl font-bold font-heading">
+        <h1 className="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight">
           Link details
         </h1>
         <Badge variant={config.variant}>{config.label}</Badge>
@@ -114,7 +116,9 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
             <label className="text-xs font-bold font-heading uppercase tracking-wide text-ink/50">
               Destination
             </label>
-            <p className="font-mono text-sm mt-1 break-all">{link.originalUrl}</p>
+            <p className="font-mono text-sm mt-1 break-all">
+              {link.originalUrl}
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

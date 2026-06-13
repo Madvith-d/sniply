@@ -27,7 +27,7 @@ export function BreakdownChart({ data, title }: BreakdownChartProps) {
                   <span className="text-ink/50">({item.percentage}%)</span>
                 </span>
               </div>
-              <div className="h-5 bg-paper border-[2px] border-ink rounded-md overflow-hidden">
+              <div className="h-5 bg-paper-2 border-[2px] border-ink rounded-md overflow-hidden">
                 <div
                   className="h-full bg-blue border-r-[2px] border-ink transition-all duration-150"
                   style={{ width: `${Math.max(item.percentage, 2)}%` }}

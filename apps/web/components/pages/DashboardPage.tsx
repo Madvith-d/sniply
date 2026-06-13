@@ -14,20 +14,17 @@ export function DashboardPage() {
 
   useEffect(() => {
     let cancelled = false;
-
     async function init() {
       try {
         const data = await linksApi.list();
         if (!cancelled) setLinks(data);
       } catch (err) {
-        if (!cancelled) {
+        if (!cancelled)
           setError(err instanceof Error ? err.message : "Failed to load links");
-        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
-
     void init();
     return () => {
       cancelled = true;
@@ -43,32 +40,36 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-10 flex flex-col gap-8">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-heading">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 flex flex-col gap-8">
+      {/* Header */}
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight">
           Your links
         </h1>
-        <p className="text-ink/70 mt-1">
+        <p className="text-ink/60 text-sm sm:text-base">
           Create, manage, and track your short URLs.
         </p>
       </div>
 
       <CreateLinkForm onCreated={handleCreated} />
 
+      {/* Links list */}
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-bold font-heading">
-          {links.length} link{links.length !== 1 ? "s" : ""}
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-extrabold font-heading uppercase tracking-widest text-ink/50">
+            {links.length} link{links.length !== 1 ? "s" : ""}
+          </h2>
+        </div>
 
         {loading && (
-          <div className="brutal-card-sm p-6 text-center font-heading font-bold animate-pulse">
-            Loading links...
+          <div className="brutal-card-sm bg-card p-6 text-center font-heading font-bold animate-pulse text-ink/60">
+            Loading links…
           </div>
         )}
 
         {error && (
-          <p className="text-sm font-medium text-red bg-red/20 border-[2px] border-red rounded-[10px] px-3 py-2">
-            {error}
+          <p className="text-sm font-semibold text-red bg-red/10 border-[2px] border-red rounded-[8px] px-4 py-3 flex items-center gap-2">
+            <span>⚠</span> {error}
           </p>
         )}
 

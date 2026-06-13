@@ -9,11 +9,13 @@ interface CardProps {
 
 export function Card({ children, className = "", title, action }: CardProps) {
   return (
-    <div className={`brutal-card p-5 md:p-6 ${className}`}>
+    <div className={`brutal-card p-5 md:p-6 bg-card ${className}`}>
       {(title || action) && (
-        <div className="flex items-center justify-between gap-4 mb-4">
+        <div className="flex items-center justify-between gap-4 mb-5">
           {title && (
-            <h2 className="text-lg font-bold font-heading">{title}</h2>
+            <h2 className="text-lg font-extrabold font-heading tracking-tight">
+              {title}
+            </h2>
           )}
           {action}
         </div>

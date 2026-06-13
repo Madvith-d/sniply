@@ -26,7 +26,6 @@ export function CreateLinkForm({ onCreated }: CreateLinkFormProps) {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const input: CreateLinkInput = { originalUrl };
       if (alias.trim()) input.alias = alias.trim();
@@ -54,25 +53,41 @@ export function CreateLinkForm({ onCreated }: CreateLinkFormProps) {
   return (
     <Card title="Shorten a link">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <Input
-          label="Destination URL"
-          type="url"
-          placeholder="https://example.com/very-long-page"
-          value={originalUrl}
-          onChange={(e) => setOriginalUrl(e.target.value)}
-          required
-        />
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex-1">
+            <Input
+              label="Destination URL"
+              type="url"
+              placeholder="https://example.com/very-long-page"
+              value={originalUrl}
+              onChange={(e) => setOriginalUrl(e.target.value)}
+              required
+            />
+          </div>
+          <div className="sm:self-end">
+            <Button
+              type="submit"
+              loading={loading}
+              className="w-full sm:w-auto whitespace-nowrap"
+            >
+              Shorten →
+            </Button>
+          </div>
+        </div>
 
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="text-sm font-bold font-heading text-left hover:underline w-fit"
+          className="text-xs font-bold font-heading text-left text-ink/60 hover:text-ink transition-colors duration-150 w-fit flex items-center gap-1.5"
         >
-          {showAdvanced ? "− Hide options" : "+ More options"}
+          <span className="w-4 h-4 flex items-center justify-center border-[2px] border-current rounded text-[10px] font-mono">
+            {showAdvanced ? "−" : "+"}
+          </span>
+          {showAdvanced ? "Hide options" : "Advanced options"}
         </button>
 
         {showAdvanced && (
-          <div className="flex flex-col gap-4 p-4 brutal-card-sm bg-paper">
+          <div className="flex flex-col gap-4 p-4 sm:p-5 brutal-card-sm bg-paper-2 animate-fade-in">
             <Input
               label="Custom alias"
               placeholder="my-link"
@@ -105,14 +120,10 @@ export function CreateLinkForm({ onCreated }: CreateLinkFormProps) {
         )}
 
         {error && (
-          <p className="text-sm font-medium text-red bg-red/20 border-[2px] border-red rounded-[10px] px-3 py-2">
-            {error}
+          <p className="text-sm font-semibold text-red bg-red/10 border-[2px] border-red rounded-[8px] px-3 py-2 flex items-center gap-2">
+            <span>⚠</span> {error}
           </p>
         )}
-
-        <Button type="submit" loading={loading} className="w-full sm:w-auto">
-          Create short link
-        </Button>
       </form>
     </Card>
   );

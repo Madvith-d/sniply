@@ -1,37 +1,81 @@
 @import "tailwindcss";
 
+/* Dark mode variant for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Light mode tokens ───────────────────────────────── */
 :root {
-  --paper: #f7f3ea;
-  --ink: #111111;
-  --yellow: #ffd23f;
-  --blue: #3b82f6;
-  --green: #4ade80;
-  --red: #fb7185;
-  --purple: #a78bfa;
-  --border: 3px solid var(--ink);
-  --shadow: 4px 4px 0 var(--ink);
-  --shadow-sm: 3px 3px 0 var(--ink);
-  --radius: 10px;
-  --transition: 150ms ease;
+    --paper: #f5f0e8;
+    --paper-2: #ede8df;
+    --ink: #0e0e0e;
+    --ink-muted: rgba(14, 14, 14, 0.55);
+    --card-bg: #ffffff;
+    --yellow: #ffd23f;
+    --blue: #2563eb;
+    --green: #16a34a;
+    --red: #e11d48;
+    --purple: #7c3aed;
+    --orange: #ea580c;
+
+    --border-color: var(--ink);
+    --border: 2.5px solid var(--border-color);
+    --shadow: 4px 4px 0 var(--ink);
+    --shadow-sm: 3px 3px 0 var(--ink);
+    --shadow-lg: 6px 6px 0 var(--ink);
+    --radius: 8px;
+    --transition: 150ms ease;
 }
 
+/* ─── Dark mode tokens ────────────────────────────────── */
+.dark {
+    --paper: #111111;
+    --paper-2: #1a1a1a;
+    --ink: #f0ebe0;
+    --ink-muted: rgba(240, 235, 224, 0.55);
+    --card-bg: #1c1c1c;
+    --yellow: #ffd23f;
+    --blue: #60a5fa;
+    --green: #4ade80;
+    --red: #fb7185;
+    --purple: #a78bfa;
+    --orange: #fb923c;
+
+    --border-color: var(--ink);
+    --shadow: 4px 4px 0 var(--ink);
+    --shadow-sm: 3px 3px 0 var(--ink);
+    --shadow-lg: 6px 6px 0 var(--ink);
+}
+
+/* ─── Tailwind theme bridge ───────────────────────────── */
 @theme inline {
-  --color-paper: var(--paper);
-  --color-ink: var(--ink);
-  --color-yellow: var(--yellow);
-  --color-blue: var(--blue);
-  --color-green: var(--green);
-  --color-red: var(--red);
-  --color-purple: var(--purple);
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-space-grotesk);
-  --font-mono: var(--font-jetbrains-mono);
+    --color-paper: var(--paper);
+    --color-paper-2: var(--paper-2);
+    --color-ink: var(--ink);
+    --color-card: var(--card-bg);
+    --color-yellow: var(--yellow);
+    --color-blue: var(--blue);
+    --color-green: var(--green);
+    --color-red: var(--red);
+    --color-purple: var(--purple);
+    --color-orange: var(--orange);
+    --font-sans: var(--font-plus-jakarta);
+    --font-heading: var(--font-space-grotesk);
+    --font-mono: var(--font-jetbrains-mono);
+}
+
+/* ─── Base ────────────────────────────────────────────── */
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-inter), system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition:
+        background-color 200ms ease,
+        color 200ms ease;
 }
 
 h1,
@@ -40,62 +84,102 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-space-grotesk), system-ui, sans-serif;
-  font-weight: 700;
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
 .font-mono {
-  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 .font-heading {
-  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
 }
 
+/* ─── Neo-brutalism cards ─────────────────────────────── */
 .brutal-card {
-  background: white;
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
 }
 
 .brutal-card-sm {
-  background: white;
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
 }
 
+.brutal-card-lg {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ─── Inputs ──────────────────────────────────────────── */
 .brutal-input {
-  width: 100%;
-  padding: 0.625rem 0.875rem;
-  background: white;
-  border: var(--border);
-  border-radius: var(--radius);
-  font-size: 0.9375rem;
-  transition: box-shadow var(--transition);
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background: var(--card-bg);
+    color: var(--ink);
+    border: var(--border);
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+    transition: box-shadow var(--transition);
 }
 
 .brutal-input:focus {
-  outline: none;
-  box-shadow: var(--shadow-sm);
+    outline: none;
+    box-shadow: var(--shadow-sm);
 }
 
 .brutal-input::placeholder {
-  color: #888;
+    color: var(--ink-muted);
 }
 
+/* ─── Animations ──────────────────────────────────────── */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .animate-fade-in {
-  animation: fade-in 180ms ease forwards;
+    animation: fade-in 200ms ease forwards;
+}
+
+.animate-slide-in {
+    animation: slide-in 200ms ease forwards;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--paper-2);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--ink);
+    border-radius: 3px;
 }

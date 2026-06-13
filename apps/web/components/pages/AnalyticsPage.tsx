@@ -104,7 +104,7 @@ export function AnalyticsPage({ id }: AnalyticsPageProps) {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="brutal-card-sm p-6 text-center font-heading font-bold animate-pulse">
+        <div className="brutal-card-sm bg-card p-6 text-center font-heading font-bold animate-pulse text-ink/60">
           Loading analytics...
         </div>
       </div>
@@ -132,7 +132,7 @@ export function AnalyticsPage({ id }: AnalyticsPageProps) {
   const url = shortUrl(link.shortCode);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-10 flex flex-col gap-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 flex flex-col gap-8">
       <div>
         <Link
           href="/dashboard"
@@ -140,7 +140,7 @@ export function AnalyticsPage({ id }: AnalyticsPageProps) {
         >
           ← Back to dashboard
         </Link>
-        <h1 className="text-2xl md:text-3xl font-bold font-heading mt-3">
+        <h1 className="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight mt-3">
           Analytics
         </h1>
         <a
@@ -160,15 +160,13 @@ export function AnalyticsPage({ id }: AnalyticsPageProps) {
           label="Time granularity"
           options={granularities}
           value={granularity}
-          onChange={(e) =>
-            setGranularity(e.target.value as TimeGranularity)
-          }
+          onChange={(e) => setGranularity(e.target.value as TimeGranularity)}
         />
       </div>
 
       <TimeSeriesChart data={timeseries} />
 
-      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
         {dimensions.map((d) => (
           <BreakdownChart
             key={d.value}

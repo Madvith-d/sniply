@@ -4,12 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { linksApi } from "@/lib/api";
 import type { Link as LinkType } from "@/lib/types";
-import {
-  formatDate,
-  getLinkStatus,
-  shortUrl,
-  truncateUrl,
-} from "@/lib/utils";
+import { formatDate, getLinkStatus, shortUrl, truncateUrl } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { CopyButton } from "@/components/links/CopyButton";
@@ -44,7 +39,8 @@ export function LinkCard({ link, onDelete }: LinkCardProps) {
   }
 
   return (
-    <div className="brutal-card-sm p-4 flex flex-col gap-3 animate-fade-in">
+    <div className="brutal-card-sm bg-card p-4 sm:p-5 flex flex-col gap-4 animate-fade-in hover:-translate-y-px hover:shadow-[4px_4px_0_var(--ink)] transition-all duration-150">
+      {/* Top row */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <a
@@ -56,32 +52,45 @@ export function LinkCard({ link, onDelete }: LinkCardProps) {
             {url}
           </a>
           <p
-            className="text-sm text-ink/60 mt-1 truncate"
+            className="text-sm text-ink/55 mt-1 truncate font-sans"
             title={link.originalUrl}
           >
-            → {truncateUrl(link.originalUrl)}
+            ↳ {truncateUrl(link.originalUrl)}
           </p>
         </div>
         <Badge variant={config.variant}>{config.label}</Badge>
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono text-ink/70">
-        <span>{link.clickCount.toLocaleString()} clicks</span>
+      {/* Stats row */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono text-ink/55 bg-paper-2 rounded-[6px] px-3 py-2 border-[2px] border-ink/20">
+        <span className="font-bold text-ink/70">
+          {link.clickCount.toLocaleString()} clicks
+        </span>
         {link.clickCap !== null && (
-          <span>cap {link.clickCap.toLocaleString()}</span>
+          <span>cap: {link.clickCap.toLocaleString()}</span>
         )}
-        <span>created {formatDate(link.createdAt)}</span>
+        <span className="ml-auto">{formatDate(link.createdAt)}</span>
       </div>
 
-      <div className="flex flex-wrap gap-2 pt-1">
+      {/* Actions */}
+      <div className="flex flex-wrap gap-2">
         <CopyButton text={url} />
         <Link href={`/links/${link.id}`}>
-          <Button variant="secondary">Details</Button>
+          <Button variant="secondary" className="text-xs px-3 py-1.5">
+            Details
+          </Button>
         </Link>
         <Link href={`/analytics/${link.id}`}>
-          <Button variant="secondary">Analytics</Button>
+          <Button variant="secondary" className="text-xs px-3 py-1.5">
+            Analytics
+          </Button>
         </Link>
-        <Button variant="danger" loading={deleting} onClick={handleDelete}>
+        <Button
+          variant="danger"
+          loading={deleting}
+          onClick={handleDelete}
+          className="text-xs px-3 py-1.5 ml-auto"
+        >
           Delete
         </Button>
       </div>
