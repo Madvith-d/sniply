@@ -1,4 +1,9 @@
-import { clearTokens, getAccessToken } from "./auth";
+import {
+  clearTokens,
+  getAccessToken,
+  getRefreshToken,
+  setTokens,
+} from "./auth";
 import type {
   AnalyticsSummary,
   BreakdownDimension,
@@ -25,6 +30,29 @@ export class ApiError extends Error {
 
 type ApiOptions = RequestInit & { skipAuth?: boolean };
 
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) return null;
+
+  try {
+    const res = await fetch(`${API_URL}/api/auth/refresh`, {
+      method: "POST",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!res.ok) return null;
+
+    const { accessToken } = await res.json();
+    // Persist the new access token alongside the existing refresh token
+    setTokens(accessToken, refreshToken);
+    return accessToken;
+  } catch {
+    return null;
+  }
+}
+
 async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
   const { skipAuth, ...fetchOptions } = options;
   const token = skipAuth ? null : getAccessToken();
@@ -45,12 +73,45 @@ async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
     throw new ApiError("Cached response unavailable — please refresh", 304);
   }
 
+  // On 401, attempt a silent token refresh and retry once
+  if (res.status === 401 && !skipAuth) {
+    const newToken = await refreshAccessToken();
+
+    if (newToken) {
+      const retryRes = await fetch(`${API_URL}${path}`, {
+        cache: "no-store",
+        ...fetchOptions,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${newToken}`,
+          ...fetchOptions.headers,
+        },
+      });
+
+      if (retryRes.status === 204) return undefined as T;
+
+      const retryData = await retryRes.json();
+
+      if (!retryRes.ok) {
+        if (retryRes.status === 401) clearTokens();
+        throw new ApiError(
+          retryData.message ?? retryData.error ?? "Request failed",
+          retryRes.status,
+        );
+      }
+
+      return retryData as T;
+    }
+
+    // Refresh failed — clear tokens and surface the error
+    clearTokens();
+    const data = await res.json().catch(() => ({}));
+    throw new ApiError(data.message ?? data.error ?? "Request failed", 401);
+  }
+
   const data = await res.json();
 
   if (!res.ok) {
-    if (res.status === 401 && !skipAuth) {
-      clearTokens();
-    }
     throw new ApiError(
       data.message ?? data.error ?? "Request failed",
       res.status,
