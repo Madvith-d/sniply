@@ -53,7 +53,13 @@ router.get("/:shortCode", async (req, res) => {
         });
     }
 
+    const forwarded =
+        req.headers["x-forwarded-for"];
+
     const ip =
+        (typeof forwarded === "string"
+            ? forwarded.split(",")[0]?.trim()
+            : undefined) ||
         req.ip ||
         req.socket.remoteAddress ||
         "unknown";

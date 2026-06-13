@@ -1,8 +1,10 @@
-import { API_BASE } from "./api";
 import type { Link } from "./types";
 
+export const APP_BASE =
+  process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
 export function shortUrl(shortCode: string): string {
-  return `${API_BASE}/${shortCode}`;
+  return `${APP_BASE}/${shortCode}`;
 }
 
 export type LinkStatus = "active" | "scheduled" | "expired" | "capped";

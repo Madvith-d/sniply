@@ -31,6 +31,7 @@ async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
   const token = skipAuth ? null : getAccessToken();
 
   const res = await fetch(`${API_BASE}${path}`, {
+    cache: "no-store",
     ...fetchOptions,
     headers: {
       "Content-Type": "application/json",
@@ -40,6 +41,10 @@ async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
   });
 
   if (res.status === 204) return undefined as T;
+
+  if (res.status === 304) {
+    throw new ApiError("Cached response unavailable — please refresh", 304);
+  }
 
   const data = await res.json();
 

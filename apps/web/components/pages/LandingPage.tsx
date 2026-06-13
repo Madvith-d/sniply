@@ -66,7 +66,7 @@ export function LandingPage() {
           <div className="flex items-center gap-2">
             <span className="text-sm font-mono text-ink/50">short</span>
             <span className="font-mono font-bold text-blue text-lg">
-              localhost:4000/docs
+              localhost:3000/docs
             </span>
           </div>
           <div className="grid grid-cols-3 gap-3 mt-2">
