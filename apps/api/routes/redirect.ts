@@ -53,30 +53,39 @@ router.get("/:shortCode", async (req, res) => {
         });
     }
 
-    await prisma.link.update({
-        where: {
-            id: link.id,
-        },
-        data: {
-            clickCount: {
-                increment: 1,
-            },
-        },
-    });
-
     const ip =
         req.ip ||
         req.socket.remoteAddress ||
         "unknown";
 
-    await recordClick({
-        linkId: link.id,
-        ip,
-        userAgent:
-            req.headers["user-agent"],
-        referer:
-            req.headers.referer,
-    });
+    await prisma.$transaction(
+        async (tx) => {
+
+            await tx.link.update({
+                where: {
+                    id: link.id,
+                },
+                data: {
+                    clickCount: {
+                        increment: 1,
+                    },
+                },
+            });
+
+            await recordClick(
+                tx,
+                {
+                    linkId: link.id,
+                    ip,
+                    userAgent:
+                        req.headers["user-agent"],
+                    referer:
+                        req.headers.referer,
+                }
+            );
+        }
+    );
+
     return res.redirect(
         307,
         link.originalUrl

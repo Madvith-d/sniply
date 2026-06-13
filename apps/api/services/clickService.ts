@@ -3,6 +3,7 @@ import { UAParser } from "ua-parser-js";
 import geoip from "geoip-lite";
 import { isbot } from "isbot";
 import crypto from "crypto";
+import type { PrismaClient, Prisma } from "../generated/prisma/client";
 
 interface ClickInput {
     linkId: string;
@@ -12,6 +13,7 @@ interface ClickInput {
 }
 
 export async function recordClick(
+    tx: Prisma.TransactionClient | PrismaClient,
     data: ClickInput
 ) {
     const parser =
@@ -35,7 +37,7 @@ export async function recordClick(
             .digest("hex");
 
     const existing =
-        await prisma.click.findFirst({
+        await tx.click.findFirst({
             where: {
                 linkId: data.linkId,
                 visitorHash,
@@ -45,7 +47,7 @@ export async function recordClick(
     const unique =
         !existing;
 
-    await prisma.click.create({
+    await tx.click.create({
         data: {
             linkId: data.linkId,
 
