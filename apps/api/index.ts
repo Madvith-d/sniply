@@ -9,7 +9,15 @@ import redirectRouter from "./routes/redirect"
 import analyticsRouter from "./routes/analytics";
 const app = express();
 config();
-app.use(cors());
+app.use(
+    cors({
+        origin: [
+            "http://localhost:3000",
+            "https://YOUR_APP.vercel.app",
+        ],
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api/auth", authRouter);
