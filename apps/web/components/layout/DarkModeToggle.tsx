@@ -11,7 +11,7 @@ export function DarkModeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-9 h-9 rounded-[8px] border-[2.5px] border-ink bg-card animate-pulse" />
+      <div className="w-9 h-9 rounded-[8px] border-[2.5px] border-ink bg-card shadow-[3px_3px_0_var(--shadow-color)] animate-pulse" />
     );
   }
 
@@ -21,7 +21,7 @@ export function DarkModeToggle() {
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="w-9 h-9 flex items-center justify-center rounded-[8px] border-[2.5px] border-ink bg-card text-ink shadow-[3px_3px_0_var(--ink)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_var(--ink)] transition-all duration-150 cursor-pointer"
+      className="w-9 h-9 flex items-center justify-center rounded-[8px] border-[2.5px] border-ink bg-card text-ink shadow-[3px_3px_0_var(--shadow-color)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_var(--shadow-color)] transition-all duration-150 cursor-pointer"
     >
       {isDark ? (
         /* Sun icon */

@@ -10,13 +10,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-yellow text-ink hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_var(--ink)]",
+    "bg-yellow text-[#101010] hover:bg-[#ffe27a] hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_var(--shadow-color)]",
   secondary:
-    "bg-card text-ink hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_var(--ink)]",
+    "bg-card text-ink hover:bg-paper-2 hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_var(--shadow-color)]",
   danger:
-    "bg-red text-ink hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_var(--ink)]",
+    "bg-red text-[#101010] hover:bg-[#ff8ca4] hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_var(--shadow-color)]",
   ghost:
-    "bg-transparent text-ink shadow-none border-transparent hover:bg-ink/10",
+    "bg-transparent text-ink shadow-none border-transparent hover:bg-paper-2/80",
 };
 
 export function Button({
@@ -29,7 +29,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold font-heading border-[2.5px] border-ink rounded-[8px] shadow-[3px_3px_0_var(--ink)] transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[3px_3px_0_var(--ink)] ${variants[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold font-heading border-[2.5px] border-ink rounded-[8px] shadow-[3px_3px_0_var(--shadow-color)] transition-all duration-150 cursor-pointer active:translate-x-px active:translate-y-px active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[3px_3px_0_var(--shadow-color)] ${variants[variant]} ${className}`}
       disabled={disabled || loading}
       {...props}
     >

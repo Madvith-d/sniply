@@ -7,6 +7,7 @@ import type { Link as LinkType } from "@/lib/types";
 import { formatDate, getLinkStatus, shortUrl, truncateUrl } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog";
 import { CopyButton } from "@/components/links/CopyButton";
 
 interface LinkCardProps {
@@ -23,23 +24,24 @@ const statusConfig = {
 
 export function LinkCard({ link, onDelete }: LinkCardProps) {
   const [deleting, setDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const status = getLinkStatus(link);
   const config = statusConfig[status];
   const url = shortUrl(link.shortCode);
 
   async function handleDelete() {
-    if (!confirm("Delete this link? This cannot be undone.")) return;
     setDeleting(true);
     try {
       await linksApi.delete(link.id);
       onDelete(link.id);
+      setConfirmOpen(false);
     } finally {
       setDeleting(false);
     }
   }
 
   return (
-    <div className="brutal-card-sm bg-card p-4 sm:p-5 flex flex-col gap-4 animate-fade-in hover:-translate-y-px hover:shadow-[4px_4px_0_var(--ink)] transition-all duration-150">
+    <div className="brutal-card-sm bg-card p-4 sm:p-5 flex flex-col gap-4 animate-fade-in hover:-translate-y-px hover:shadow-[4px_4px_0_var(--shadow-color)] transition-all duration-150">
       {/* Top row */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
@@ -88,12 +90,23 @@ export function LinkCard({ link, onDelete }: LinkCardProps) {
         <Button
           variant="danger"
           loading={deleting}
-          onClick={handleDelete}
+          onClick={() => setConfirmOpen(true)}
           className="text-xs px-3 py-1.5 ml-auto"
         >
           Delete
         </Button>
       </div>
+
+      <DeleteConfirmDialog
+        open={confirmOpen}
+        loading={deleting}
+        onCancel={() => {
+          if (!deleting) {
+            setConfirmOpen(false);
+          }
+        }}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

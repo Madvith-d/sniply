@@ -31,7 +31,7 @@ export function LandingPage() {
       {/* Hero */}
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div className="flex flex-col gap-6 order-2 lg:order-1">
-          <div className="inline-flex w-fit px-3 py-1.5 text-[11px] font-extrabold font-heading uppercase tracking-widest border-[2.5px] border-ink rounded-md bg-yellow">
+          <div className="inline-flex w-fit px-3 py-1.5 text-[11px] font-extrabold font-heading uppercase tracking-widest border-[2.5px] border-ink rounded-md bg-blue text-ink">
             URL shortener for builders
           </div>
 
@@ -42,7 +42,7 @@ export function LandingPage() {
             <br />
             <span className="relative inline-block">
               No fluff.
-              <span className="absolute -bottom-1 left-0 w-full h-[3px] bg-yellow" />
+              <span className="absolute -bottom-1 left-0 w-full h-[3px] bg-orange" />
             </span>
           </h1>
 
@@ -88,7 +88,7 @@ export function LandingPage() {
             <div className="flex-1 h-[2.5px] bg-ink/20" />
           </div>
 
-          <div className="flex items-center gap-3 bg-yellow/20 border-[2.5px] border-ink rounded-[8px] px-4 py-3">
+          <div className="flex items-center gap-3 bg-yellow/20 border-[2.5px] border-ink rounded-[8px] px-4 py-3 shadow-[4px_4px_0_var(--shadow-color)]">
             <span className="shrink-0 text-[10px] font-bold font-heading uppercase tracking-wider border-[2px] border-ink/40 rounded px-1.5 py-0.5 bg-card">
               url
             </span>
@@ -166,7 +166,7 @@ export function LandingPage() {
           ].map((feature) => (
             <div
               key={feature.title}
-              className="brutal-card-sm bg-card p-5 sm:p-6 flex flex-col gap-3 hover:-translate-y-px hover:shadow-[4px_5px_0_var(--ink)] transition-all duration-150"
+              className="brutal-card-sm bg-card p-5 sm:p-6 flex flex-col gap-3 hover:-translate-y-px hover:shadow-[4px_5px_0_var(--shadow-color)] transition-all duration-150"
             >
               <span className="text-2xl">{feature.emoji}</span>
               <h3 className="font-extrabold font-heading tracking-tight">

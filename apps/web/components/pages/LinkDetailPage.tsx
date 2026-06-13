@@ -9,6 +9,7 @@ import { formatDate, getLinkStatus, shortUrl } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog";
 import { CopyButton } from "@/components/links/CopyButton";
 
 interface LinkDetailPageProps {
@@ -27,6 +28,7 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
   const [link, setLink] = useState<LinkType | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -40,7 +42,6 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
   }, [id]);
 
   async function handleDelete() {
-    if (!confirm("Delete this link? This cannot be undone.")) return;
     setDeleting(true);
     try {
       await linksApi.delete(id);
@@ -158,10 +159,25 @@ export function LinkDetailPage({ id }: LinkDetailPageProps) {
         <Link href={`/analytics/${link.id}`}>
           <Button>View analytics</Button>
         </Link>
-        <Button variant="danger" loading={deleting} onClick={handleDelete}>
+        <Button
+          variant="danger"
+          loading={deleting}
+          onClick={() => setConfirmOpen(true)}
+        >
           Delete link
         </Button>
       </div>
+
+      <DeleteConfirmDialog
+        open={confirmOpen}
+        loading={deleting}
+        onCancel={() => {
+          if (!deleting) {
+            setConfirmOpen(false);
+          }
+        }}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }
