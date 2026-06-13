@@ -4,6 +4,9 @@ export const APP_BASE =
   process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export function shortUrl(shortCode: string): string {
+  if (typeof window !== "undefined") {
+    return `${window.location.origin}/${shortCode}`;
+  }
   return `${APP_BASE}/${shortCode}`;
 }
 
