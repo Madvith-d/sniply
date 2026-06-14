@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/Button";
+import { BRAND_NAME } from "@/lib/utils";
 
 export function LandingPage() {
   const { user, loading } = useAuth();
@@ -47,7 +48,7 @@ export function LandingPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-ink/65 max-w-md leading-relaxed font-sans">
-            Sniply turns long URLs into short codes with click tracking, geo
+            {BRAND_NAME} turns long URLs into short codes with click tracking, geo
             breakdowns, and scheduling — built for developers who want tools
             that actually work.
           </p>
@@ -93,7 +94,7 @@ export function LandingPage() {
               url
             </span>
             <span className="font-mono font-bold text-blue text-base sm:text-lg truncate">
-              snip.ly/docs
+              {BRAND_NAME.toLowerCase().replace(/[^a-z0-9]/g, "")}.ly/docs
             </span>
             <svg
               className="ml-auto shrink-0 text-ink/40"

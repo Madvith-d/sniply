@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import type { ShortLinkState } from "@/lib/resolveShortLink";
+import { BRAND_NAME } from "@/lib/utils";
 
 interface LinkInterstitialPageProps {
   state: ShortLinkState;
@@ -82,7 +83,7 @@ export function LinkInterstitialPage({
 
         <div className="pt-2">
           <Link href="/">
-            <Button variant="secondary">Back to Sniply</Button>
+            <Button variant="secondary">Back to {BRAND_NAME}</Button>
           </Link>
         </div>
       </div>

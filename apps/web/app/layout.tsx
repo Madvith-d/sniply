@@ -7,6 +7,7 @@ import {
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
+import { BRAND_NAME } from "@/lib/utils";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -28,7 +29,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sniply — Short links with real analytics",
+  title: `${BRAND_NAME} — Short links with real analytics`,
   description:
     "A developer-focused URL shortener with click tracking, scheduling, and breakdown analytics.",
 };

@@ -6,6 +6,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
+import { BRAND_NAME } from "@/lib/utils";
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -34,7 +35,7 @@ export function LoginForm() {
           Welcome back
         </h1>
         <p className="text-ink/55 text-sm mt-1">
-          Log in to your Sniply account
+          Log in to your {BRAND_NAME} account
         </p>
       </div>
       <Card>

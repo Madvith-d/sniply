@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/Button";
 import { DarkModeToggle } from "@/components/layout/DarkModeToggle";
+import { BRAND_NAME } from "@/lib/utils";
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -16,7 +17,7 @@ export function Header() {
           href={user ? "/dashboard" : "/"}
           className="text-xl font-extrabold font-heading tracking-tight hover:opacity-75 transition-opacity duration-150 shrink-0"
         >
-          sniply<span className="text-yellow">.</span>
+          {BRAND_NAME.toLowerCase()}<span className="text-yellow">.</span>
         </Link>
 
         {/* Nav */}

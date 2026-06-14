@@ -3,6 +3,9 @@ import type { Link } from "./types";
 export const APP_BASE =
   process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
+export const BRAND_NAME =
+  process.env.NEXT_PUBLIC_BRAND_NAME || "Sniply";
+
 export function shortUrl(shortCode: string): string {
   if (typeof window !== "undefined") {
     return `${window.location.origin}/${shortCode}`;

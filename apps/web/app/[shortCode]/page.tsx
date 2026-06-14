@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { LinkInterstitialPage } from "@/components/pages/LinkInterstitialPage";
 import { resolveShortLink } from "@/lib/resolveShortLink";
+import { BRAND_NAME } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
@@ -9,7 +10,7 @@ export async function generateMetadata({
   params: Promise<{ shortCode: string }>;
 }): Promise<Metadata> {
   const { shortCode } = await params;
-  return { title: `${shortCode} — Sniply` };
+  return { title: `${shortCode} — ${BRAND_NAME}` };
 }
 
 export default async function ShortLinkPage({
