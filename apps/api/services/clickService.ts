@@ -53,9 +53,9 @@ export async function recordClick(
 
       os: result.os.name,
 
-      country: geo.country,
+      country: geo.country?.trim() || null,
 
-      city: geo.city,
+      city: geo.city?.trim() || null,
 
       referer: data.referer,
     },

@@ -57,7 +57,7 @@ export async function getBreakdown(
   const total = rows.reduce((sum, row) => sum + row._count.id, 0);
 
   return rows.map((row) => ({
-    label: row[by] ?? "Unknown",
+    label: row[by]?.trim() || "Unknown",
 
     count: row._count.id,
 
