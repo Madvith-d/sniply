@@ -30,23 +30,20 @@ export interface GeoInfo {
  *  3. Fall back to ip-api.com (free, no API key, city-level accuracy)
  *     with a 1.5 s timeout so redirects never hang.
  */
+
 export async function lookupGeo(ip: string): Promise<GeoInfo> {
     if (!ip || isPrivateIP(ip)) return {};
 
-    // Fast path — local MaxMind DB bundled with geoip-lite
+    // Fast path — only use local DB if we have complete city-level data
     const local = geoip.lookup(ip);
-    if (local) {
+    if (local?.city) {
         return { country: local.country, city: local.city };
     }
 
-    // Fallback — ip-api.com (free, non-commercial, ≤45 req/min)
-    // Returns city-level approximate location, not street-level.
+    // Fallback — ip-api.com has better city coverage than the bundled MaxMind DB
     try {
         const controller = new AbortController();
-        const timer = setTimeout(
-            () => controller.abort(),
-            1500
-        );
+        const timer = setTimeout(() => controller.abort(), 1500);
 
         const res = await fetch(
             `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,countryCode,city`,
@@ -64,13 +61,18 @@ export async function lookupGeo(ip: string): Promise<GeoInfo> {
 
             if (data.status === "success") {
                 return {
-                    country: data.countryCode ?? null,
+                    country: data.countryCode ?? local?.country ?? null,
                     city: data.city ?? null,
                 };
             }
         }
     } catch {
-        // Network error or timeout — geo simply stays null
+        // Network error or timeout — fall through
+    }
+
+    // ip-api.com failed; at least return whatever geoip-lite had
+    if (local) {
+        return { country: local.country, city: null };
     }
 
     return {};
