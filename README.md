@@ -1,6 +1,5 @@
 # sniply
-
-To install dependencies:
+![alt text](image.png)
 
 ```bash
 bun install
