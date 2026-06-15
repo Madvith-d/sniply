@@ -7,6 +7,7 @@ import linksRouter from "./routes/links";
 import { config } from "dotenv";
 import redirectRouter from "./routes/redirect"
 import analyticsRouter from "./routes/analytics";
+import { errorHandler } from "./middleware/errorHandler";
 const app = express();
 config();
 app.use(
@@ -32,6 +33,7 @@ app.get("/health", (_, res) => {
 });
 
 app.use("/", redirectRouter);
+app.use(errorHandler);
 app.listen(4000, () => {
     console.log("Server running on port 4000");
 });

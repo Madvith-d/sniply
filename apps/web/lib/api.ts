@@ -30,6 +30,25 @@ export class ApiError extends Error {
 
 type ApiOptions = RequestInit & { skipAuth?: boolean };
 
+
+async function safeJson(res: Response): Promise<unknown> {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Server returned non-JSON (HTML error page, gateway error, …)
+    console.error(
+      `[api] Non-JSON response (HTTP ${res.status}) from ${res.url}:`,
+      text.slice(0, 300),
+    );
+    throw new ApiError(
+      `Server returned an unexpected response (HTTP ${res.status}). ` +
+      `This is due to render cold start please try again in a moment`,
+      res.status || 500,
+    );
+  }
+}
+
 async function refreshAccessToken(): Promise<string | null> {
   const refreshToken = getRefreshToken();
   if (!refreshToken) return null;
@@ -44,10 +63,9 @@ async function refreshAccessToken(): Promise<string | null> {
 
     if (!res.ok) return null;
 
-    const { accessToken } = await res.json();
-    // Persist the new access token alongside the existing refresh token
-    setTokens(accessToken, refreshToken);
-    return accessToken;
+    const data = (await safeJson(res)) as { accessToken: string };
+    setTokens(data.accessToken, refreshToken);
+    return data.accessToken;
   } catch {
     return null;
   }
@@ -90,12 +108,14 @@ async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
 
       if (retryRes.status === 204) return undefined as T;
 
-      const retryData = await retryRes.json();
+      const retryData = await safeJson(retryRes); // ← was retryRes.json()
 
       if (!retryRes.ok) {
         if (retryRes.status === 401) clearTokens();
         throw new ApiError(
-          retryData.message ?? retryData.error ?? "Request failed",
+          (retryData as { message?: string; error?: string }).message ??
+          (retryData as { message?: string; error?: string }).error ??
+          "Request failed",
           retryRes.status,
         );
       }
@@ -105,15 +125,22 @@ async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
 
     // Refresh failed — clear tokens and surface the error
     clearTokens();
-    const data = await res.json().catch(() => ({}));
-    throw new ApiError(data.message ?? data.error ?? "Request failed", 401);
+    const data = await safeJson(res).catch(() => ({}));
+    throw new ApiError(
+      (data as { message?: string; error?: string }).message ??
+      (data as { message?: string; error?: string }).error ??
+      "Request failed",
+      401,
+    );
   }
 
-  const data = await res.json();
+  const data = await safeJson(res); // ← was res.json()
 
   if (!res.ok) {
     throw new ApiError(
-      data.message ?? data.error ?? "Request failed",
+      (data as { message?: string; error?: string }).message ??
+      (data as { message?: string; error?: string }).error ??
+      "Request failed",
       res.status,
     );
   }
