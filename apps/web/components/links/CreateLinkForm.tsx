@@ -25,6 +25,16 @@ export function CreateLinkForm({ onCreated }: CreateLinkFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    try {
+      const destHost = new URL(originalUrl).hostname.toLowerCase();
+      const appHost = window.location.hostname.toLowerCase();
+      if (destHost === appHost) {
+        setError("Destination URL can't point back to this app — it would create an infinite redirect loop.");
+        return;
+      }
+    } catch {
+      // Let the server validate malformed URLs
+    }
     setLoading(true);
     try {
       const input: CreateLinkInput = { originalUrl };

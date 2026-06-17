@@ -16,6 +16,27 @@ export async function createLink(
     const shortCode =
         data.alias || generateShortCode();
 
+    const appUrl = process.env.APP_URL;
+    if (appUrl) {
+        try {
+            const destHost = new URL(data.originalUrl).hostname.toLowerCase();
+            const appHost = new URL(appUrl).hostname.toLowerCase();
+
+            if (destHost === appHost) {
+                throw new Error(
+                    "Destination URL cannot point back to this app — it would create an infinite redirect loop."
+                );
+            }
+        } catch (err) {
+            // Re-throw our own error; ignore URL parse errors
+            if (
+                err instanceof Error &&
+                err.message.startsWith("Destination URL cannot")
+            ) {
+                throw err;
+            }
+        }
+    }
     const existing =
         await prisma.link.findUnique({
             where: {
